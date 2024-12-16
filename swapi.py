@@ -49,11 +49,15 @@ class SWRequester(APIRequester):
 # и сохранит файл
 def save_sw_data():
     response_swapi = SWRequester('https://swapi.dev/api')
-
-    Path('data').mkdir(exist_ok=True)
-
     categories_swapi = list(response_swapi.get_sw_categories())
-    for category in categories_swapi:
-        path = f'data/{category}.txt'
-        with open(path, 'w') as file:
-            file.write(response_swapi.get_sw_info(category))
+    try:
+        Path('data').mkdir(exist_ok=True)
+    except Exception:
+        print('Папка "data" не была создана')
+    try:
+        for category in categories_swapi:
+            path = f'data/{category}.txt'
+            with open(path, 'w', encoding='utf-8') as file:
+                file.write(response_swapi.get_sw_info(category))
+    except Exception:
+        print('Ошибка при создании и записи файлов')
